@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma"
 
 export async function DELETE(
     req: Request,
-    { params }: { params: { categoryId: string } }
+    { params }: { params: Promise<{ categoryId: string }> }
 ) {
     try {
         const session = await auth()
@@ -12,13 +12,15 @@ export async function DELETE(
             return new NextResponse("Unauthorized", { status: 401 })
         }
 
-        if (!params.categoryId) {
+        const { categoryId } = await params
+
+        if (!categoryId) {
             return new NextResponse("Category ID is required", { status: 400 })
         }
 
         const category = await prisma.category.deleteMany({
             where: {
-                id: params.categoryId,
+                id: categoryId,
                 userId: session.user.id,
             },
         })
