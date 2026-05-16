@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma"
 
 export async function DELETE(
     req: Request,
-    { params }: { params: { id: string } }
+    { params }: any
 ) {
     try {
         const session = await auth()
@@ -12,9 +12,11 @@ export async function DELETE(
             return new NextResponse("Unauthorized", { status: 401 })
         }
 
+        const { id } = await params
+
         await prisma.recurringTransaction.deleteMany({
             where: {
-                id: params.id,
+                id,
                 userId: session.user.id,
             },
         })
