@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import React, { useState, Suspense } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -36,7 +36,7 @@ const formSchema = z.object({
     }),
 })
 
-export default function LoginPage() {
+function LoginForm() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const registered = searchParams.get("registered")
@@ -137,5 +137,13 @@ export default function LoginPage() {
                 </div>
             </CardFooter>
         </Card>
+    )
+}
+
+export default function LoginPage() {
+    return (
+        <React.Suspense fallback={<div>Loading...</div>}>
+            <LoginForm />
+        </React.Suspense>
     )
 }
