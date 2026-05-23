@@ -9,9 +9,11 @@ import { processRecurringTransactions } from "@/lib/recurring-processor"
 
 export default async function DashboardPage() {
     const session = await auth()
-    if (!session?.user?.id) redirect("/login")
+    if (!session?.user?.id) {
+        redirect("/login")
+    }
 
-    const userId = session.user.id
+    const userId = session.user.id as string
 
     // Process recurring transactions
     await processRecurringTransactions(userId)
